@@ -13,16 +13,16 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        style={{paddingTop: statusBarHeight, backgroundColor: '#000400'}}
+        style={{ marginTop: statusBarHeight, backgroundColor: '#FFF' }}
         screenOptions={{
-          tabBarActiveTintColor: 'white',
-          tabBarLabelStyle: { fontSize: 12 },
-          tabBarIndicatorStyle: { backgroundColor: 'white', height: 3,borderBottomLeftRadius: 100, borderBottomRightRadius: 100 },
-          tabBarStyle: { backgroundColor: 'black'},
+          tabBarActiveTintColor: '#000',
+          tabBarLabelStyle: { fontSize: 14 },
+          tabBarIndicatorStyle: { backgroundColor: '#000', height: 3 },
+          tabBarStyle: { backgroundColor: '#FFF' },
         }}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Tasks" component={TaskScreen} />        
+        <Tab.Screen name="Tasks" component={TaskScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
