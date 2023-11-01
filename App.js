@@ -19,8 +19,8 @@ export default function App() {
           screenOptions={{
             tabBarActiveTintColor: '#000',
             tabBarLabelStyle: { fontSize: 14 },
-            tabBarIndicatorStyle: { backgroundColor: '#000', height: 3 },
-            tabBarStyle: { backgroundColor: '#fff',paddingTop: statusBarHeight },
+            tabBarIndicatorStyle: { backgroundColor: '#000' },
+            tabBarStyle: { backgroundColor: '#FFF',paddingTop: statusBarHeight-6 },
           }}
         >
           <Tab.Screen name="Home" component={HomeScreen} />

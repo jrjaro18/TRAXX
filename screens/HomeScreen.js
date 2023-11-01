@@ -85,7 +85,8 @@ const HomeScreen = () => {
   useKeepAwake();
 
   return (
-    <ScrollView className='flex-1 bg-[#fffbfb] px-3 pt-2'>
+    <ScrollView className='flex-1 bg-white px-3 pt-2'>
+      {/* TRAXX CARD */}
       <Card
         height={'$15'}
         borderRadius="$6"
@@ -93,12 +94,12 @@ const HomeScreen = () => {
         padded
         elevate
         elevation={6}
-        shadowColor={'$green7Dark'} 
+        shadowColor={'$green7Dark'}
       >
         <CardBackground
         >
           <LinearGradient
-            colors={['#6DD5F0', '#FFFFFF']}
+            colors={['#FFFFFF', '#83EAF1', '#63AFFF']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={{ flex: 1, borderRadius: 10 }}
@@ -138,6 +139,9 @@ const HomeScreen = () => {
           </View>
         </CardFooter>
       </Card>
+
+      {/* REMAINING TASK CARD */}
+
       <View>
         <Card
           height={'$8'}
@@ -152,7 +156,7 @@ const HomeScreen = () => {
             borderRadius="$5"
           >
             <LinearGradient
-              colors={['#6DD5FA', '#FFFFFF']}
+              colors={['#FFFFFF', '#83EAF1', '#63AFFF']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={{ flex: 1, borderRadius: 6 }}
@@ -167,7 +171,7 @@ const HomeScreen = () => {
             </View>
             <View className='flex flex-row justify-between items-center'>
               <Progress size={'$2'} value={40} width={'88%'}>
-                <Progress.Indicator animation="bouncy" backgroundColor={'rgb(23,37,84)'} />
+                <Progress.Indicator animation="bouncy" backgroundColor={'$blue7Dark'} />
               </Progress>
               <Text className='text-blue-950 text-xs'>
                 33%
@@ -176,94 +180,102 @@ const HomeScreen = () => {
           </View>
         </Card>
       </View>
-      <View className='flex flex-row gap-x-2 justify-center'>
-        <TouchableOpacity className='mt-4 flex bg-blue-950 p-3 rounded-xl'
-          onPress={togglePressedZen}
-          style={
-            {
-              width: pressedZen ? '82%' : '97%',
-            }
-          }
-        >
-          <Text className='text-white text-lg text-center tracking-wider'>
-            {
-              (!pressedZen) ? (
-                "Start Zen"
-              ) : (
-                "Stop Zen"
-              )
-            }
-          </Text>
-        </TouchableOpacity>
 
+      {/* ZEN BUTTON AND STUFF */}
+      <View>
+        <View className='flex flex-row gap-x-2 justify-center items-center'>
+          <TouchableOpacity className='mt-4 flex bg-sky-950 p-3 rounded-xl'
+            onPress={togglePressedZen}
+            style={
+              {
+                width: pressedZen ? '86%' : '97%',
+              }
+            }
+          >
+            <Text className='text-white text-lg text-center tracking-wider'>
+              {
+                (!pressedZen) ? (
+                  "Start Zen"
+                ) : (
+                  "Stop Zen"
+                )
+              }
+            </Text>
+          </TouchableOpacity>
+
+          {
+            (!pressedZen) ? (
+              null
+            ) : (
+              <TouchableOpacity className='mt-4'
+                onPress={toggleSound}
+              >
+                {
+                  (!soundPlayed) ? (
+                    <AntDesign name="play" size={32} color="rgb(8 47 73)" />
+                  ) : (
+                    <AntDesign name="pausecircle" size={32} color="rgb(8 47 73)" />
+                  )
+                }
+              </TouchableOpacity>
+            )
+          }
+        </View>
         {
           (!pressedZen) ? (
             null
-          ) : (
-            <TouchableOpacity
-              className='mt-4 p-3 rounded-full bg-blue-950'
-              onPress={toggleSound}
-            >
-              {
-                (!soundPlayed) ? (
-                  <AntDesign name="play" size={27} color="white" />
-                ) : (
-                  <AntDesign name="pausecircle" size={27} color="white" />
-                )
-              }
-            </TouchableOpacity>
+          ) : (<>
+            <View className='bg-blue-50 h-80 w-full mt-4 rounded-3xl overflow-hidden mx-auto'>
+              <ImageBackground
+                source={require('../assets/spinner-4.gif')}
+                className='h-80 items-center justify-center rounded-full'
+                resizeMode='cover'
+              >
+                <Text className='text-blue-950 text-2xl font-medium text-center tracking-wider'>
+                  {
+                    elapsedTime < 60 ? (
+                      elapsedTime + " secs"
+                    ) : (
+                      Math.floor(elapsedTime / 60) + " mins" + " " + (elapsedTime % 60) + " secs"
+                    )
+                  }
+                </Text>
+              </ImageBackground>
+            </View>
+          </>
           )
         }
       </View>
-      {
-        (!pressedZen) ? (
-          null
-        ) : (<>
-          <View className='bg-blue-50 h-80 w-full mt-4 rounded-3xl overflow-hidden mx-auto'>
-            <ImageBackground
-              source={require('../assets/spinner-4.gif')}
-              className='h-80 items-center justify-center rounded-full'
-              resizeMode='cover'
-            >
-              <Text className='text-blue-950 text-2xl font-medium text-center tracking-wider'>
-                {
-                  elapsedTime < 60 ? (
-                    elapsedTime + " secs"
-                  ) : (
-                    Math.floor(elapsedTime / 60) + " mins" + " " + (elapsedTime % 60) + " secs"
-                  )
-                }
-              </Text>
-            </ImageBackground>
-          </View>
-        </>
-        )
-      }
 
       <Separator horizontal marginVertical={'$2.5'} backgroundColor={'rgb(23,37,84)'} className='mx-auto w-11/12 mt-5' />
-      <View className='mt-2 bg-[#ECF7FF] rounded-xl pt-3 pb-10 mx-auto overflow-hidden w-full'>
+
+      {/* WEEKLY PROGRESS CHART */}
+      <View className='mt-2 bg-[#ECF7FF] rounded-xl pt-3 pb-10 mx-auto overflow-hidden w-full flex justify-center'>
         <Text className='text-xl text-center font-normal text-blue-950 tracking-wide'>
           Your Weekly Progress
         </Text>
-        <BarChart
-          barWidth={22}
-          barBorderRadius={4}
-          frontColor="lightgray"
-          data={barData}
-          yAxisThickness={0}
-          xAxisThickness={0}
-          isAnimated={true}
-          animationDuration={275}
-          showFractionalValues={false}
-          maxValue={18}
-          noOfSections={3}
-          height={200}
-          backgroundColor="transparent"
-          rulesColor={'gray'}
-          rulesType='dashed'
-        />
+        <View>
+          <BarChart
+            barWidth={24}
+            barBorderRadius={4}
+            frontColor="lightgray"
+            data={barData}
+            yAxisThickness={0}
+            xAxisThickness={0}
+            isAnimated={true}
+            animationDuration={300}
+            showFractionalValues={false}
+            maxValue={18}
+            noOfSections={3}
+            height={175}
+            backgroundColor="transparent"
+            rulesColor={'gray'}
+            rulesType='dashed'
+          />
+        </View>
       </View>
 
+      {/* STATS CARD SET */}
       <View className='mt-4'>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className='flex flex-row gap-x-2' scrollEventThrottle={0.000001}>
           {
