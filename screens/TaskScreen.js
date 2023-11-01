@@ -3,10 +3,11 @@ import React from 'react'
 import { ScrollView } from 'tamagui'
 import Card_Tasks_1 from '../components/Card_Tasks_1'
 import { Ionicons } from '@expo/vector-icons';
+import TaskPageContent from '../components/TaskPageContent';
 
 const TaskScreen = () => {
     return (
-        <View className='flex-1 bg-neutral-800'>
+        <View className='flex-1 bg-neutral-900'>
             <View className='h-2/6 p-3'>
                 <View className='flex flex-row justify-between items-center mb-4'>
                     <Text className='text-white font-light text-2xl tracking-wider'>
@@ -24,11 +25,11 @@ const TaskScreen = () => {
                     ))}
                 </ScrollView>
             </View>
-            <ScrollView className='bg-slate-100 rounded-t-3xl p-3'>
-
+            <ScrollView className='bg-slate-100 rounded-t-3xl p-3 overflow-hidden'>
+                <TaskPageContent />         
             </ScrollView>
-            <TouchableOpacity className='absolute bottom-4 right-4 bg-neutral-800 p-2 rounded-full'>
-                <Ionicons name="ios-add" size={24} color="white" />
+            <TouchableOpacity className='absolute bottom-4 right-4 bg-neutral-800 p-2 rounded-xl'>
+                <Ionicons name="ios-add" size={30} color="white" />
             </TouchableOpacity>
         </View>
     )

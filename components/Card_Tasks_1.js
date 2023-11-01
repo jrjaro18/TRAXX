@@ -3,7 +3,7 @@ import React from 'react'
 import { Card, CardBackground, ScrollView, Progress } from 'tamagui'
 import { CardFooter } from '@tamagui/card'
 
-const Card_Tasks_1 = (card) => {
+const Task_Category_Card = (card) => {
     const { title, tasks, progress, image } = card.card
     return (
         <TouchableOpacity>
@@ -27,7 +27,7 @@ const Card_Tasks_1 = (card) => {
                 </CardBackground>
                 <View>
                     <View>
-                        <Text className='font-bold tracking-wider text-lg text-left text-blue-950'>
+                        <Text className='tracking-wide text-base font-medium text-left text-slate-900'>
                             {title}
                         </Text>
                         <Text className='tracking-wider text-xs text-left text-blue-950 '>
@@ -37,11 +37,11 @@ const Card_Tasks_1 = (card) => {
                 </View>
                 <CardFooter>
                     <View>
-                        <Text className='text-blue-950 font-extralight text-base tracking-wider'>
+                        <Text className='text-blue-950 font-light text-sm tracking-wider'>
                             {progress}%
                         </Text>
                         <Progress size={'$2'} value={progress} height={'$0.5'} marginTop={'$2'} >
-                            <Progress.Indicator animation="bouncy" backgroundColor={'$blue6Dark'} />
+                            <Progress.Indicator animation="bouncy" backgroundColor={'$blue7Dark'} />
                         </Progress>
                     </View>
                 </CardFooter>
@@ -50,5 +50,5 @@ const Card_Tasks_1 = (card) => {
     )
 }
 
-export default Card_Tasks_1
+export default Task_Category_Card
 
