@@ -1,13 +1,20 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity, FlatList, Animated } from 'react-native'
+import React, { useRef } from 'react'
 import { ScrollView } from 'tamagui'
-import Card_Tasks_1 from '../components/Card_Tasks_1'
+import TaskCategoryCard from '../components/TaskCategoryCard'
 import { Ionicons } from '@expo/vector-icons';
 import TaskPageContent from '../components/TaskPageContent';
+import { FlashList } from '@shopify/flash-list/dist';
+import { Dimensions } from 'react-native';
 
 const TaskScreen = () => {
+    const scrollX = React.useRef(new Animated.Value(0)).current
+    const emptyPlaceholders = [{ empty: true, title: 1 }, ...cardData, { empty: true, title: 2 }];
+    const width = Dimensions.get('window').width
+
+    const item_size = 180
     return (
-        <View className='flex-1 bg-neutral-900'>
+        <View className='flex-1 bg-neutral-800'>
             <View className='h-2/6 p-3'>
                 <View className='flex flex-row justify-between items-center mb-4'>
                     <Text className='text-white font-light text-2xl tracking-wider'>
@@ -17,18 +24,63 @@ const TaskScreen = () => {
                         ({new Date().toLocaleDateString()}) - {days[new Date().getDay()]}
                     </Text>
                 </View>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={0.0000001} className='flex flex-row gap-x-3 mt-1'>
-                    {cardData.map((card, index) => (
-                        <View key={index}>
-                            <Card_Tasks_1 card={card} />
-                        </View>
-                    ))}
-                </ScrollView>
+                <Animated.FlatList
+                    data={emptyPlaceholders}
+                    horizontal={true}
+                    renderItem={({ item, index }) => {
+                        
+                        if (item.empty) {
+                            return <View style={{ width: (width - item_size) / 2 }} className="pr-4" />;
+                        }
+
+                        const inputRange = [
+                            (index - 2) * item_size,
+                            (index - 1) * item_size,
+                            (index) * item_size,
+                        ]
+
+                        const translateY = scrollX.interpolate({
+                            inputRange,
+                            outputRange: [10, 10, 10]
+                        })
+                        const opacity = scrollX.interpolate({
+                            inputRange,
+                            outputRange: [0.7, 1, 0.7]
+                        })
+                        const scale = scrollX.interpolate({
+                            inputRange,
+                            outputRange: [0.8,1.01,0.8]
+                        })
+
+                        return (
+                            <Animated.View className='mr-4'
+                                style={{
+                                    transform: [{ translateY }, { scale }],
+                                    opacity,
+                                }}
+                            >
+                                <TaskCategoryCard card={item} />
+                            </Animated.View>
+                        );
+                    }}
+                    estimatedItemSize={cardData.length}
+                    keyExtractor={item => item.title}
+                    scrollEventThrottle={16}
+                    showsHorizontalScrollIndicator={false}
+                    bounces={false}
+                    snapToInterval={item_size}
+                    snapToAlignment='start'
+                    decelerationRate={0}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                        { useNativeDriver: true }
+                    )}
+                />
             </View>
-            <ScrollView className='bg-slate-100 rounded-t-3xl p-3 overflow-hidden'>
-                <TaskPageContent />         
-            </ScrollView>
-            <TouchableOpacity className='absolute bottom-4 right-4 bg-neutral-800 p-2 rounded-xl'>
+            <View className='bg-slate-100 rounded-t-3xl p-3 overflow-hidden flex-1 flex-grow'>
+                <TaskPageContent />
+            </View>
+            <TouchableOpacity className='absolute bottom-2 right-4 bg-neutral-800 p-2 rounded-xl'>
                 <Ionicons name="ios-add" size={30} color="white" />
             </TouchableOpacity>
         </View>
@@ -97,7 +149,7 @@ const cardData = [
         tasks: 1,
         progress: 100,
         image: require('../assets/bg-1.jpg')
-    }
+    },
 ]
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']

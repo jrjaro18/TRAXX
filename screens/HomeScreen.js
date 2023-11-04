@@ -6,6 +6,8 @@ import { Audio } from 'expo-av';
 import { AntDesign } from '@expo/vector-icons';
 import { BarChart } from "react-native-gifted-charts";
 import { useKeepAwake } from 'expo-keep-awake';
+import { FlashList } from '@shopify/flash-list/dist';
+import TaskStatCard from '../components/TaskStatCard';
 
 const HomeScreen = () => {
   const [pressedZen, setPressedZen] = useState(false);
@@ -99,7 +101,7 @@ const HomeScreen = () => {
         <CardBackground
         >
           <LinearGradient
-            colors={['#FFFFFF', '#83EAF1', '#63AFFF']}
+            colors={['#FFFFFF', '#83EAF1', '#63CFFF']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={{ flex: 1, borderRadius: 10 }}
@@ -156,7 +158,7 @@ const HomeScreen = () => {
             borderRadius="$5"
           >
             <LinearGradient
-              colors={['#FFFFFF', '#83EAF1', '#63AFFF']}
+              colors={['#FFFFFF', '#83EAF1', '#63CFFF']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={{ flex: 1, borderRadius: 6 }}
@@ -277,42 +279,22 @@ const HomeScreen = () => {
 
       {/* STATS CARD SET */}
       <View className='mt-4'>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className='flex flex-row gap-x-2' scrollEventThrottle={0.000001}>
-          {
-            cardDetails.map((cardDetail, index) => (
-              <View key={index}>
-                <Card
-                  height={'$11.5'}
-                  width={'$20'}
-                  borderRadius="$6"
-                  padded
-                >
-                  <CardBackground
-                    borderRadius="$5"
-                    backgroundColor={'#ECF7FF'}
-                  />
-                  <View>
-                    <Text className='text-blue-950 text-lg font-light tracking-wide'>
-                      {cardDetail.title}
-                    </Text>
-                    <View className='flex flex-row justify-between items-center'>
-
-                      <Image
-                        source={require('../assets/icon.png')}
-                        className=' h-14 w-14'
-                        resizeMode='contain'
-
-                      />
-                      <Text className='text-blue-950 text-5xl font-light tracking-wide mt-2 p-2'>
-                        {cardDetail.value}
-                      </Text>
-                    </View>
-                  </View>
-                </Card>
-              </View>
-            ))
-          }
-        </ScrollView>
+        <FlashList
+          data={cardDetails}
+          horizontal={true}
+          renderItem={({ item }) => (
+            <View className='mr-2'>
+              <TaskStatCard cardDetail={item} />
+            </View>
+          )}
+          estimatedItemSize={cardDetails.length}
+          keyExtractor={item => item.title}
+          scrollEventThrottle={16}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={292}
+          snapToAlignment='start'
+          decelerationRate={'fast'}
+        />
       </View>
 
       <View className='mb-8' />

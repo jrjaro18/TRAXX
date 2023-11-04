@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity, ImageBackground } from 'react-native'
-import React from 'react'
-import { Card, CardBackground, ScrollView, Progress } from 'tamagui'
+import { View, Text, TouchableOpacity, ImageBackground, Animated } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Card, CardBackground, Progress } from 'tamagui'
 import { CardFooter } from '@tamagui/card'
 
-const Task_Category_Card = (card) => {
-    const { title, tasks, progress, image } = card.card
+const TaskCategoryCard = (card) => {
+    const { title, tasks, progress, image, empty } = card.card
     return (
         <TouchableOpacity>
             <Card
@@ -50,5 +50,5 @@ const Task_Category_Card = (card) => {
     )
 }
 
-export default Task_Category_Card
+export default TaskCategoryCard
 
