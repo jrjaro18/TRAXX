@@ -1,62 +1,100 @@
 import { View, Text, TouchableOpacity } from 'react-native'
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Card, CardBackground } from 'tamagui'
-import { Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, Entypo, MaterialIcons, AntDesign } from '@expo/vector-icons';
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 
-const Task_Prev_Card = (data) => {
-  const task = data.data
+const Task_Prev_Card = ({ task, index, onComponentOpen }) => {
+
   const [extended, setExtended] = useState(false)
-  
-  return (
-    <View className='mt-4 relative'>
-      <Card
-        borderRadius={'$4.5'}
-        minHeight={'$8'}
-        padded
-        elevation={2}
-        shadowColor={task.done?'green':'lightgray'}
-      >
-        <CardBackground
-          backgroundColor={task.done ? '$green5Light' : 'white'}
-          borderRadius={'$3.5'}
-        />
-        <View className='flex items-start flex-row justify-between'>
-          {/* Done */}
-          <TouchableOpacity className={task.done ? ' rounded-full mt-1 p-1 bg-green-400' : 'rounded-full mt-1'}>
-            {
-              task.done ? (
-                <MaterialIcons name="done" size={20} color="white" />
-              ) : (
-                <Entypo name="circle" size={29} color="rgb(229,231,235)" />
-              )
-            }
-          </TouchableOpacity>
-          {/* Task */}
-          <View>
-            <Text className='w-56 text-base text-justify tracking-wider text-blue-950'>
-              {task.title}
-            </Text>
-            {
-              task.subtasks.length > 0 && (
-                <Text className={task.done?'text-xs mt-3 font-bold text-gray-400':'text-xs mt-3 font-bold text-gray-300'}>
-                  + {task.subtasks.length} subtasks
-                </Text>
-              )
-            }
+  const ref = useRef(null);
 
-          </View>
-          {/* Date */}
-          <View>
-            <Text className='text-sm font-semibold text-gray-500 mt-1'>
-              {task.date}
-            </Text>
-          </View>
-        </View>
-        <TouchableOpacity className='absolute bottom-3 right-3'>
-          <Ionicons name="chevron-down-outline" size={24} color="gray" />
+  useEffect(() => {
+    console.log('swipe')
+    if (!task.opened) {
+      ref.current.close();
+    }
+  },[task.opened])
+
+  const leftSwipe = () => {
+    return (
+      <TouchableOpacity className='flex flex-row justify-start items-center p-5 rounded-xl mr-1 bg-green-200 mt-5'
+        onPress={() => {
+          ref.current.close();
+        }}
+      >
+        <MaterialIcons name="done" size={28} color="green" />
+      </TouchableOpacity>
+    )
+  }
+
+  const rightSwipe = () => {
+    return (
+      <View className='flex flex-row'>
+        <TouchableOpacity className='flex flex-row justify-start items-center p-5 rounded-l-xl ml-1 bg-blue-200 mt-4'
+          onPress={() => {
+            ref.current.close();
+          }}
+        >
+          <AntDesign name="edit" size={28} color="black" />
         </TouchableOpacity>
-      </Card>
-    </View>
+        <TouchableOpacity className='flex flex-row justify-start items-center p-5 rounded-r-xl bg-red-200 mt-4'
+          onPress={() => {
+            ref.current.close();
+          }}
+        >
+          <Ionicons name="trash-outline" size={28} color="red" />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+  return (
+    <GestureHandlerRootView className="flex-1">
+      <Swipeable renderRightActions={rightSwipe} renderLeftActions={leftSwipe} ref={ref} onSwipeableOpen={() => {
+        onComponentOpen(index);
+      }}>
+        <TouchableOpacity className='mt-4 relative'
+          onPress={() => { 
+              console.log('triggered')   
+            }}
+        >
+          <Card
+            borderRadius={'$4.5'}
+            minHeight={'$9'}
+            padded
+            // elevation={1}
+            shadowColor={task.done ? 'gray' : 'lightgray'}
+            backgroundColor={task.done ? '#A9FFB8' : 'white'}
+          >
+            <CardBackground
+              backgroundColor={task.done ? '#A9FFB8' : 'white'}
+              borderRadius={'$3.5'}
+            />
+            <View className='flex items-start flex-row justify-between'>
+              {/* Task */}
+              <View>
+                <Text className='w-64 text-base text-justify tracking-wider text-blue-950'>
+                  {task.title}
+                </Text>
+                {
+                  task.subtasks.length > 0 && (
+                    <Text className={task.done ? 'text-xs mt-3 font-bold text-blue-300' : 'text-xs mt-3 font-bold text-neutral-300'}>
+                      {task.subtasks.filter(subtask => subtask.done).length} out of {task.subtasks.length} Subtasks Completed
+                    </Text>
+                  )
+                }
+              </View>
+              {/* Date */}
+              <View>
+                <Text className='text-sm font-semibold text-gray-500 mt-1'>
+                  {task.date}
+                </Text>
+              </View>
+            </View>
+          </Card>
+        </TouchableOpacity>
+      </Swipeable>
+    </GestureHandlerRootView>
   )
 }
 

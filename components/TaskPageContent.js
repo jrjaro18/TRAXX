@@ -1,16 +1,31 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Separator } from 'tamagui'
 import Task_Prev_Card from './Task_Prev_Card';
 import { FlashList } from "@shopify/flash-list";
 
 const TaskPageContent = () => {
+    const [cardData, setCardData] = useState(data);
+
+    const onComponentOpen = (index) => {
+        let temp = [...cardData];
+        temp.map((item, i) => {
+            if (i === index) {
+                item.opened = true;
+                return item;
+            } else {
+                item.opened = false;
+                return item;
+            }
+        })
+        setCardData(temp);
+    }
     return (
         <FlashList
             data={cardData}
             horizontal={false}
-            renderItem={({ item }) => (
-                <Task_Prev_Card data={item} />
+            renderItem={({ item, index }) => (
+                <Task_Prev_Card task={item} index={index} onComponentOpen={onComponentOpen} />
             )}
             estimatedItemSize={cardData.length}
             ListHeaderComponent={() => (
@@ -40,11 +55,11 @@ const TaskPageContent = () => {
 export default TaskPageContent
 
 // title->str, description->str, subtasks->array=>{title->str, done->bool}, done->bool
-const cardData = [
+const data = [
     {
         date: 'Nov 1',
         title: 'Buy Cake and Candles for Birthday',
-        description: 'Buy Cake and Candles for Birthday and also buy some gifts for her.',
+        opened: false,
         subtasks: [
             {
                 title: 'Buy a 500gm Cake',
@@ -63,8 +78,8 @@ const cardData = [
     },
     {
         date: 'Nov 1',
-        title: 'Buy Cake and Candles for Birthday and also buy some gifts for her.',
-        description: 'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+        title: 'Buy Cake and Candles for Birthday and also buy some gifts for friends and family.',
+        opened: false,
         subtasks: [
             {
                 title: 'Buy a 500gm Cake',
@@ -96,21 +111,21 @@ const cardData = [
     {
         date: 'Nov 1',
         title: 'Prepare for the DBMS exam',
-        description: '',
+        opened: false,
         subtasks: [],
         done: false,
     },
     {
         date: 'Nov 1',
         title: 'Prepare for the OS exam',
-        description: '',
+        opened: false,
         subtasks: [],
         done: true,
     },
     {
         date: 'Nov 1',
         title: 'Prepare for the ESE exam',
-        description: 'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+        opened: false,
         subtasks: [
             {
                 title: 'Prepare for the LA exam',

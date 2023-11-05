@@ -293,7 +293,7 @@ const HomeScreen = () => {
           showsHorizontalScrollIndicator={false}
           snapToInterval={292}
           snapToAlignment='start'
-          decelerationRate={'fast'}
+          decelerationRate={0}
         />
       </View>
 

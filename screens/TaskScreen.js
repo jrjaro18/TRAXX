@@ -1,10 +1,8 @@
-import { View, Text, TouchableOpacity, FlatList, Animated } from 'react-native'
+import { View, Text, TouchableOpacity, Animated } from 'react-native'
 import React, { useRef } from 'react'
-import { ScrollView } from 'tamagui'
 import TaskCategoryCard from '../components/TaskCategoryCard'
 import { Ionicons } from '@expo/vector-icons';
 import TaskPageContent from '../components/TaskPageContent';
-import { FlashList } from '@shopify/flash-list/dist';
 import { Dimensions } from 'react-native';
 
 const TaskScreen = () => {
@@ -28,7 +26,7 @@ const TaskScreen = () => {
                     data={emptyPlaceholders}
                     horizontal={true}
                     renderItem={({ item, index }) => {
-                        
+
                         if (item.empty) {
                             return <View style={{ width: (width - item_size) / 2 }} className="pr-4" />;
                         }
@@ -41,15 +39,15 @@ const TaskScreen = () => {
 
                         const translateY = scrollX.interpolate({
                             inputRange,
-                            outputRange: [10, 10, 10]
+                            outputRange: [13, 10, 13]
                         })
                         const opacity = scrollX.interpolate({
                             inputRange,
-                            outputRange: [0.7, 1, 0.7]
+                            outputRange: [0.3, 1, 0.3]
                         })
                         const scale = scrollX.interpolate({
                             inputRange,
-                            outputRange: [0.8,1.01,0.8]
+                            outputRange: [0.85, 1.01, 0.85]
                         })
 
                         return (
@@ -91,64 +89,70 @@ export default TaskScreen
 
 const cardData = [
     {
+        title: 'TODAY',
+        tasks: 10,
+        progress: 0,
+        image: require('../assets/icon.png')
+    },
+    {
         title: 'HOME',
         tasks: 5,
         progress: 0,
-        image: require('../assets/bg-1.jpg')
+        image: require('../assets/bg-7.jpg')
     },
     {
         title: 'WORK',
         tasks: 3,
         progress: 25,
-        image: require('../assets/bg-2.jpg')
+        image: require('../assets/bg-9.jpg')
     },
     {
         title: 'SHOPPING',
         tasks: 2,
         progress: 33,
-        image: require('../assets/bg-4.jpg')
+        image: require('../assets/bg-11.jpg')
     },
     {
         title: 'STUDY',
         tasks: 1,
         progress: 70,
-        image: require('../assets/bg-2.jpg')
+        image: require('../assets/bg-8.jpg')
     },
     {
         title: 'TRAVEL',
         tasks: 4,
         progress: 80,
-        image: require('../assets/bg-1.jpg')
+        image: require('../assets/bg-13.jpg')
     },
     {
         title: 'HOBBIES',
         tasks: 2,
         progress: 100,
-        image: require('../assets/bg-4.jpg')
+        image: require('../assets/icon.png')
     },
     {
         title: 'PERSONAL',
         tasks: 2,
         progress: 100,
-        image: require('../assets/bg-2.jpg')
+        image: require('../assets/bg-13.jpg')
     },
     {
         title: 'FINANCE',
         tasks: 1,
         progress: 100,
-        image: require('../assets/bg-1.jpg')
+        image: require('../assets/bg-9.jpg')
     },
     {
         title: 'SELF-GROWTH',
         tasks: 1,
         progress: 100,
-        image: require('../assets/bg-4.jpg')
+        image: require('../assets/bg-7.jpg')
     },
     {
         title: 'OTHERS',
         tasks: 1,
         progress: 100,
-        image: require('../assets/bg-1.jpg')
+        image: require('../assets/bg-13.jpg')
     },
 ]
 

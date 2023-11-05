@@ -4,7 +4,7 @@ import { Card, CardBackground, Progress } from 'tamagui'
 import { CardFooter } from '@tamagui/card'
 
 const TaskCategoryCard = (card) => {
-    const { title, tasks, progress, image, empty } = card.card
+    const { title, tasks, progress, image } = card.card
     return (
         <TouchableOpacity>
             <Card
@@ -22,7 +22,8 @@ const TaskCategoryCard = (card) => {
                         source={image}
                         style={{ flex: 1, opacity: 0.8 }}
                         resizeMode='cover'
-                        blurRadius={0}
+                        blurRadius={30}
+                        opacity={0.8}
                     />
                 </CardBackground>
                 <View>

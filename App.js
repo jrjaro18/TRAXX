@@ -13,7 +13,9 @@ export default function App() {
   const statusBarHeight = Constants.statusBarHeight
   return (
     <TamaguiProvider config={config}>
-      <NavigationContainer>
+      <NavigationContainer
+        threshold={20}
+      >
         <Tab.Navigator
           style={{ backgroundColor: '#fff' }}
           screenOptions={{
@@ -21,6 +23,7 @@ export default function App() {
             tabBarLabelStyle: { fontSize: 14 },
             tabBarIndicatorStyle: { backgroundColor: '#000' },
             tabBarStyle: { backgroundColor: '#FFF',paddingTop: statusBarHeight-6 },
+            swipeEnabled: false,
           }}
         >
           <Tab.Screen name="Home" component={HomeScreen} />
