@@ -1,11 +1,13 @@
-import { View, Text } from 'react-native'
-import React, { useState } from 'react'
-import { Separator } from 'tamagui'
+import { View, Text, LayoutAnimation } from 'react-native'
+import React, { useState, useRef, useCallback } from 'react'
 import Task_Prev_Card from './Task_Prev_Card';
 import { FlashList } from "@shopify/flash-list";
 
+
 const TaskPageContent = () => {
+    console.log("here")
     const [cardData, setCardData] = useState(data);
+    const list = useRef(null);
 
     const onComponentOpen = (index) => {
         let temp = [...cardData];
@@ -20,16 +22,82 @@ const TaskPageContent = () => {
         })
         setCardData(temp);
     }
+
+    const onTaskComplete = (index) => {
+        // Clone the original array
+        let temp = [...cardData];
+        // Toggle the 'done' property of the task at the specified index
+        temp[index].done = !temp[index].done;
+        if(temp[index].done) {
+            temp[index].subtasks.map((item) => {
+                item.done = true;
+                return item;
+            })
+        }
+        // Sort the tasks so that completed tasks appear at the end
+        temp.sort((a, b) => a.done - b.done);
+        // Update the state to trigger a re-render
+        setCardData(temp);
+        list.current?.prepareForLayoutAnimationRender();
+        // After removing the item, we can start the animation.
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
+
+    const onTaskDelete = (index) => {
+        // Clone the original array
+        let temp = [...cardData];
+        // Remove the task at the specified index
+        temp.splice(index, 1);
+        // Update the state to trigger a re-render
+        setCardData(temp);
+        list.current?.prepareForLayoutAnimationRender();
+        // After removing the item, we can start the animation.
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
+
+    const onSubTaskComplete = (taskIndex, subtaskIndex) => {
+        // Clone the original array
+        let temp = [...cardData];
+        // Toggle the 'done' property of the task at the specified index
+        temp[taskIndex].subtasks[subtaskIndex].done = !temp[taskIndex].subtasks[subtaskIndex].done;
+        if(!temp[taskIndex].subtasks.every(item => item.done)) {
+            temp[taskIndex].done = false;
+        }
+        // Sort the tasks so that completed tasks appear at the end
+        temp[taskIndex].subtasks.sort((a, b) => a.done - b.done);
+        // Update the state to trigger a re-render
+        setCardData(temp);
+    }
+
+    const onSubTaskDelete = (taskIndex, subtaskIndex) => {
+        // Clone the original array
+        let temp = [...cardData];
+        // Remove the task at the specified index
+        temp[taskIndex].subtasks.splice(subtaskIndex, 1);
+        // Update the state to trigger a re-render
+        setCardData(temp);
+        list.current?.prepareForLayoutAnimationRender();
+        // After removing the item, we can start the animation.
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
+
     return (
         <FlashList
             data={cardData}
+            ref={list}
             horizontal={false}
             renderItem={({ item, index }) => (
-                <Task_Prev_Card task={item} index={index} onComponentOpen={onComponentOpen} />
+                <Task_Prev_Card task={item} taskIndex={index} 
+                onComponentOpen={onComponentOpen} 
+                onTaskComplete={onTaskComplete} 
+                onTaskDelete={onTaskDelete}
+                onSubTaskComplete={onSubTaskComplete}
+                onSubTaskDelete={onSubTaskDelete}
+                />
             )}
             estimatedItemSize={cardData.length}
             ListHeaderComponent={() => (
-                <View className='flex flex-row justify-between items-center mx-2'>
+                <View className='flex flex-row justify-between items-center mx-3'>
                     <Text className='text-blue-950 font-light text-xl tracking-wider'>
                         Today
                     </Text>
@@ -40,7 +108,6 @@ const TaskPageContent = () => {
             )}
             ListFooterComponent={() => (
                 <>
-                    <Separator marginTop={24} borderColor={'lightgray'} />
                     <View className='p-3' />
                 </>
             )}
@@ -59,6 +126,7 @@ const data = [
     {
         date: 'Nov 1',
         title: 'Buy Cake and Candles for Birthday',
+        category: 'Self Growth',
         opened: false,
         subtasks: [
             {
@@ -79,6 +147,7 @@ const data = [
     {
         date: 'Nov 1',
         title: 'Buy Cake and Candles for Birthday and also buy some gifts for friends and family.',
+        category: 'Home',
         opened: false,
         subtasks: [
             {
@@ -111,6 +180,7 @@ const data = [
     {
         date: 'Nov 1',
         title: 'Prepare for the DBMS exam',
+        category: 'Study',
         opened: false,
         subtasks: [],
         done: false,
@@ -119,12 +189,14 @@ const data = [
         date: 'Nov 1',
         title: 'Prepare for the OS exam',
         opened: false,
+        category: 'Study',
         subtasks: [],
         done: true,
     },
     {
         date: 'Nov 1',
         title: 'Prepare for the ESE exam',
+        category: 'Study',
         opened: false,
         subtasks: [
             {
@@ -136,6 +208,22 @@ const data = [
                 done: true,
             }
         ],
+        done: true,
+    },
+    {
+        date: 'Nov 1',
+        title: 'Prepare for the MSE exam',
+        category: 'Study',
+        opened: false,
+        subtasks: [],
+        done: true,
+    },
+    {
+        date: 'Nov 1',
+        title: 'Prepare for the DSA exam',
+        category: 'Study',
+        opened: false,
+        subtasks: [],
         done: true,
     }
 ]

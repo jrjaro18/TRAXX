@@ -265,7 +265,7 @@ const HomeScreen = () => {
             yAxisThickness={0}
             xAxisThickness={0}
             isAnimated={true}
-            animationDuration={300}
+            animationDuration={0}
             showFractionalValues={false}
             maxValue={18}
             noOfSections={3}

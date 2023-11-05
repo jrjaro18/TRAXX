@@ -75,7 +75,7 @@ const TaskScreen = () => {
                     )}
                 />
             </View>
-            <View className='bg-slate-100 rounded-t-3xl p-3 overflow-hidden flex-1 flex-grow'>
+            <View className='bg-slate-100 rounded-t-3xl py-3 overflow-hidden flex-1 flex-grow'>
                 <TaskPageContent />
             </View>
             <TouchableOpacity className='absolute bottom-2 right-4 bg-neutral-800 p-2 rounded-xl'>
