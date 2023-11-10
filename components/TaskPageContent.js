@@ -5,23 +5,9 @@ import { FlashList } from "@shopify/flash-list";
 
 
 const TaskPageContent = () => {
-    console.log("here")
+    // console.log("here")
     const [cardData, setCardData] = useState(data);
     const list = useRef(null);
-
-    const onComponentOpen = (index) => {
-        let temp = [...cardData];
-        temp.map((item, i) => {
-            if (i === index) {
-                item.opened = true;
-                return item;
-            } else {
-                item.opened = false;
-                return item;
-            }
-        })
-        setCardData(temp);
-    }
 
     const onTaskComplete = (index) => {
         // Clone the original array
@@ -36,6 +22,7 @@ const TaskPageContent = () => {
         }
         // Sort the tasks so that completed tasks appear at the end
         temp.sort((a, b) => a.done - b.done);
+
         // Update the state to trigger a re-render
         setCardData(temp);
         list.current?.prepareForLayoutAnimationRender();
@@ -66,7 +53,11 @@ const TaskPageContent = () => {
         // Sort the tasks so that completed tasks appear at the end
         temp[taskIndex].subtasks.sort((a, b) => a.done - b.done);
         // Update the state to trigger a re-render
+        temp.sort((a, b) => a.done - b.done);
         setCardData(temp);
+        list.current?.prepareForLayoutAnimationRender();
+        // After removing the item, we can start the animation.
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     }
 
     const onSubTaskDelete = (taskIndex, subtaskIndex) => {
@@ -88,11 +79,12 @@ const TaskPageContent = () => {
             horizontal={false}
             renderItem={({ item, index }) => (
                 <Task_Prev_Card task={item} taskIndex={index} 
-                onComponentOpen={onComponentOpen} 
+                //onComponentOpen={onComponentOpen} 
                 onTaskComplete={onTaskComplete} 
                 onTaskDelete={onTaskDelete}
                 onSubTaskComplete={onSubTaskComplete}
                 onSubTaskDelete={onSubTaskDelete}
+                list={list}
                 />
             )}
             estimatedItemSize={cardData.length}
@@ -102,7 +94,7 @@ const TaskPageContent = () => {
                         Today
                     </Text>
                     <Text className='text-blue-950 text-sm tracking-wider'>
-                        Remaining: 10
+                        Remaining: {cardData.filter(item => !item.done).length}
                     </Text>
                 </View>
             )}
@@ -127,7 +119,7 @@ const data = [
         date: 'Nov 1',
         title: 'Buy Cake and Candles for Birthday',
         category: 'Self Growth',
-        opened: false,
+        // opened: false,
         subtasks: [
             {
                 title: 'Buy a 500gm Cake',
@@ -148,7 +140,7 @@ const data = [
         date: 'Nov 1',
         title: 'Buy Cake and Candles for Birthday and also buy some gifts for friends and family.',
         category: 'Home',
-        opened: false,
+        // opened: false,
         subtasks: [
             {
                 title: 'Buy a 500gm Cake',
@@ -181,14 +173,14 @@ const data = [
         date: 'Nov 1',
         title: 'Prepare for the DBMS exam',
         category: 'Study',
-        opened: false,
+        // opened: false,
         subtasks: [],
         done: false,
     },
     {
         date: 'Nov 1',
         title: 'Prepare for the OS exam',
-        opened: false,
+        // opened: false,
         category: 'Study',
         subtasks: [],
         done: true,
@@ -197,7 +189,7 @@ const data = [
         date: 'Nov 1',
         title: 'Prepare for the ESE exam',
         category: 'Study',
-        opened: false,
+        // opened: false,
         subtasks: [
             {
                 title: 'Prepare for the LA exam',
@@ -214,7 +206,7 @@ const data = [
         date: 'Nov 1',
         title: 'Prepare for the MSE exam',
         category: 'Study',
-        opened: false,
+        // opened: false,
         subtasks: [],
         done: true,
     },
@@ -222,7 +214,7 @@ const data = [
         date: 'Nov 1',
         title: 'Prepare for the DSA exam',
         category: 'Study',
-        opened: false,
+        // opened: false,
         subtasks: [],
         done: true,
     }

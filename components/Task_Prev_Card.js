@@ -1,25 +1,29 @@
-import { View, Text, TouchableOpacity, Platform } from 'react-native'
+import { View, Text, TouchableOpacity, Platform, Vibration, LayoutAnimation } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import { Card, CardBackground, Separator } from 'tamagui'
 import { Ionicons, Entypo, MaterialIcons, AntDesign, Feather } from '@expo/vector-icons';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
-const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTaskDelete, onTaskEdit, onSubTaskComplete, onSubTaskDelete }) => {
-  const [extended, setExtended] = useState(false)
+const Task_Prev_Card = ({ task, taskIndex, /*onComponentOpen,*/ onTaskComplete, onTaskDelete, onTaskEdit, onSubTaskComplete, onSubTaskDelete, list }) => {
+  const [extended, setExtended] = useState(false);
   const ref = useRef(null);
+  const navigation = useNavigation();
   console.log("task list item rendered")
 
-  useEffect(() => {
-    console.log('swipe')
-    if (!task.opened) {
-      ref.current.close();
-    }
-  }, [task.opened])
+  //create a timer to automatically close the card after 5 seconds
+  const time = () => {
+    const timer = setTimeout(() => {
+      ref.current?.close();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }
 
   const leftSwipe = () => {
     return (
       <TouchableOpacity className='flex flex-row justify-start items-center p-5 bg-emerald-200 mt-4'
         onPress={() => {
+          Vibration.vibrate(10)
           onTaskComplete(taskIndex);
           ref.current.close();
         }}
@@ -34,6 +38,7 @@ const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTa
       <View className='flex flex-row'>
         <TouchableOpacity className='flex flex-row justify-start items-center p-5 bg-blue-200 mt-4'
           onPress={() => {
+            Vibration.vibrate(10)
             ref.current.close();
           }}
         >
@@ -41,8 +46,9 @@ const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTa
         </TouchableOpacity>
         <TouchableOpacity className='flex flex-row justify-start items-center p-5 bg-red-200 mt-4'
           onPress={() => {
-            ref.current.close();
+            Vibration.vibrate(10)
             onTaskDelete(taskIndex);
+            ref.current.close();
           }}
         >
           <Ionicons name="trash-outline" size={28} color="red" />
@@ -53,14 +59,20 @@ const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTa
   return (
     <GestureHandlerRootView className="flex-1 mx-1">
       <Swipeable
-        leftThreshold={100} rightThreshold={40} enabled={!extended && !(Platform.OS === 'ios')} renderRightActions={rightSwipe} renderLeftActions={leftSwipe} ref={ref} onSwipeableOpen={() => {
-          onComponentOpen(taskIndex); 
+        enabled={!extended && !(Platform.OS === 'ios')} renderRightActions={rightSwipe} renderLeftActions={leftSwipe} ref={ref}
+        rightThreshold={5} leftThreshold={30} overshootRight={false} overshootLeft={false}
+        //keep open for 5 seconds
+        onSwipeableOpen={() => {
+          time();
         }}
       >
         <TouchableOpacity className='mt-4 relative'
           onPress={() => {
-            console.log('triggered')
+            Vibration.vibrate(10)
+            list.current?.prepareForLayoutAnimationRender();
             setExtended(!extended);
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
           }}
         >
           <Card
@@ -110,9 +122,10 @@ const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTa
                 <View className='mt-2'>
                   {
                     task.subtasks.map((subtask, index) => (
-                      <View key={index} className='flex flex-row justify-between items-start'>
-                        <TouchableOpacity className='flex flex-row items-start gap-x-2 pt-3'
+                      <View key={index} className='flex flex-row justify-between items-start border-b-[1px] border-gray-100 py-2'>
+                        <TouchableOpacity className='flex flex-row items-center gap-x-2'
                           onPress={() => {
+                            Vibration.vibrate(10);
                             onSubTaskComplete(taskIndex, index);
                           }}
                         >
@@ -129,9 +142,10 @@ const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTa
                             {subtask.title}
                           </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity className='mt-3 p-1 bg-gray-100 rounded-md'
+                        <TouchableOpacity className='p-1 bg-gray-100 rounded-md'
                           onPress={() => {
                             onSubTaskDelete(taskIndex, index);
+                            Vibration.vibrate(10)
                           }}
                         >
                           <Feather name="trash" size={18} color="darkred" />
@@ -144,8 +158,9 @@ const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTa
                     <View className='flex justify-between w-2/4'>
                       <TouchableOpacity className='flex w-40 flex-row justify-start items-center mt-3 p-2 bg-red-300'
                         onPress={() => {
-                          ref.current.close();
+                          Vibration.vibrate(10)
                           onTaskDelete(taskIndex);
+                          ref.current.close();
                         }}
                       >
                         <Feather name="trash" size={24} color="black" />
@@ -153,7 +168,12 @@ const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTa
                           Delete Task
                         </Text>
                       </TouchableOpacity>
-                      <TouchableOpacity className='flex w-40 flex-row justify-start items-center mt-2 p-2 bg-blue-200'>
+                      <TouchableOpacity className='flex w-40 flex-row justify-start items-center mt-2 p-2 bg-blue-200'
+                        onPress={() => {
+                          Vibration.vibrate(10)
+                          //onTaskEdit(taskIndex);
+                        }}
+                      >
                         <AntDesign name="edit" size={24} color="black" />
                         <Text className='text-base ml-2 px-2'>
                           Edit Task
@@ -162,6 +182,7 @@ const Task_Prev_Card = ({ task, taskIndex, onComponentOpen, onTaskComplete, onTa
                     </View>
                     <TouchableOpacity className='flex flex-row justify-center items-center mt-3 w-2/4 bg-green-300'
                       onPress={() => {
+                        Vibration.vibrate(10)
                         onTaskComplete(taskIndex);
                       }}
                     >

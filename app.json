@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Local-Todo-RN-App",
-    "slug": "Local-Todo-RN-App",
+    "name": "Traxx",
+    "slug": "traxx",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#D5E1E9"
-      }
+      },
+      "package": "com.jrjaro18.Traxx"
     },
     "web": {
       "favicon": "./assets/icon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dc86e7f2-32b4-4e38-8eda-8ac72ef2a163"
+      }
+    },
+    "owner": "jrjaro18"
   }
 }

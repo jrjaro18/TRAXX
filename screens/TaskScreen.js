@@ -1,14 +1,16 @@
-import { View, Text, TouchableOpacity, Animated } from 'react-native'
+import { View, Text, TouchableOpacity, Animated, Vibration } from 'react-native'
 import React, { useRef } from 'react'
 import TaskCategoryCard from '../components/TaskCategoryCard'
 import { Ionicons } from '@expo/vector-icons';
 import TaskPageContent from '../components/TaskPageContent';
 import { Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const TaskScreen = () => {
     const scrollX = React.useRef(new Animated.Value(0)).current
     const emptyPlaceholders = [{ empty: true, title: 1 }, ...cardData, { empty: true, title: 2 }];
     const width = Dimensions.get('window').width
+    const navigation = useNavigation();
 
     const item_size = 180
     return (
@@ -78,7 +80,14 @@ const TaskScreen = () => {
             <View className='bg-slate-100 rounded-t-3xl py-3 overflow-hidden flex-1 flex-grow'>
                 <TaskPageContent />
             </View>
-            <TouchableOpacity className='absolute bottom-2 right-4 bg-neutral-800 p-2 rounded-xl'>
+            <TouchableOpacity className='absolute bottom-2 right-4 bg-neutral-800 p-2 rounded-xl'
+                onPress={
+                    () => {
+                        navigation.navigate('AddTaskScreen')
+                        Vibration.vibrate(10)
+                    }
+                }
+            >
                 <Ionicons name="ios-add" size={30} color="white" />
             </TouchableOpacity>
         </View>

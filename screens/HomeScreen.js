@@ -264,7 +264,7 @@ const HomeScreen = () => {
             data={barData}
             yAxisThickness={0}
             xAxisThickness={0}
-            isAnimated={true}
+            isAnimated={false}
             animationDuration={0}
             showFractionalValues={false}
             maxValue={18}

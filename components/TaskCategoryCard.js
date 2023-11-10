@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ImageBackground, Animated } from 'react-native'
+import { View, Text, TouchableOpacity, ImageBackground, Animated, Vibration } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Card, CardBackground, Progress } from 'tamagui'
 import { CardFooter } from '@tamagui/card'
@@ -6,7 +6,10 @@ import { CardFooter } from '@tamagui/card'
 const TaskCategoryCard = (card) => {
     const { title, tasks, progress, image } = card.card
     return (
-        <TouchableOpacity>
+        <TouchableOpacity
+            // vibrate on press
+            onPress={() => Vibration.vibrate(15)}
+        >
             <Card
                 height={'$13'}
                 width={'$13'}
